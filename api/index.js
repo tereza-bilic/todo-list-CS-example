@@ -1,4 +1,3 @@
-//require the just installed express app
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database(':memory:')
 
@@ -73,8 +72,6 @@ app.delete('/todo/:id', function (req, res) {
   db.run('DELETE FROM todos WHERE id = ?', [req.params.id])
   res.send('todo deleted')
 })
-
-
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
