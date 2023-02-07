@@ -1,4 +1,3 @@
 # Pokretanje servera
-npm init
-npm install express sqlite3 bodyParser --save
+npm install express sqlite3 body-parser --save
 node index.js
