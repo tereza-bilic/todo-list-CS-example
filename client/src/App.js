@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import LoginForm from './components/LoginForm/LoginForm';
-import TodoList from './components/TodoList/TodoList';
+import TodoList2 from './components/TodoList/TodoList2';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/todo",
-    element: <TodoList />
+    element: <TodoList2 />
   }
 ]);
 

@@ -1,6 +1,10 @@
 // pretend data is come from api
 import React, { useState, useEffect, useRef } from 'react';
 import TextField from '@mui/material/TextField';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 const listApi = async () => {
   return await Promise.resolve([
@@ -32,15 +36,6 @@ const listApi = async () => {
       checked: false
     },
   ]);
-};
-
-const Textarea = ({ inputProps }) => {
-  const ref = useRef(null);
-  useEffect(() => {
-    if (!inputProps.disabled) ref.current.focus();
-  }, [inputProps.disabled]);
-
-  return <textarea ref={ref} {...inputProps} />;
 };
 
 const TodoList = () => {
@@ -131,7 +126,7 @@ const TodoList = () => {
   }, []);
 
   return (
-    <div className={`list-container ${isDeleting ? "edit-mode" : ""}`}>
+    <Container component="main" maxWidth="m">
       <div className="top-btns">
         <button onClick={handleAddClick}>Add</button>
         {
@@ -143,44 +138,32 @@ const TodoList = () => {
       </div>
       <div className="list">
         {listData.map(item => (
-          <div key={item.id} className="item">
+          <Box key={item.id} sx={{display: "flex", justifyContent: "space-between"}}>
             <div
               className={`checkbox ${item.checked ? "checked" : ""}`}
               onClick={()=> handleCheck(item)}
             >
-              {item.checked ? "☑" : "☐"}
+              {item.checked ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
             </div>
             <div
-              className="input-container"
               onDoubleClick={() => handleEdit(item, true)}
             >
               <TextField
-                id="outlined-multiline-flexible"
-                label="Multiline"
-                multiline
-                maxRows={4}
+                sx={{width: 3/3}}
+                label="ToDo"
+                name="content"
                 value={item.content}
-                onChange={ e => changeHandler(e, item)}
-              />
-              <Textarea
-                inputProps={{
-                  className: "input",
-                  name: "content",
-                  onChange: e => changeHandler(e, item),
-                  onBlur: e => handleEdit(item, false),
-                  value: item.content,
-                  disabled: !item.editable,
-                  placeholder: "Things to be done~"
-                }}
+                onChange={e => changeHandler(e, item)}
+                onBlur={e => handleEdit(item, false)}
               />
             </div>
             <div className="inside-btns">
               {<button onClick={() => handleDelete(item.id)}>X</button>}
             </div>
-          </div>
+          </Box>
         ))}
       </div>
-    </div>
+    </Container>
   );
 };
 
