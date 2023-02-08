@@ -12,7 +12,7 @@ const Todo = ({ todo, index, completeTodo, removeTodo }) => {
     <List>
       <ListItem button>
         <Checkbox
-          checked={todo.completed}
+          checked={0}
           onClick={() => completeTodo(index)}
         />
         <ListItemText primary={todo.title} />
@@ -40,6 +40,7 @@ const TodoForm = ({ addTodo }) => {
       });
       const data = await response.json();
       addTodo(data);
+      
       setTitle("");
       setColor("");
       setDate("");
@@ -98,7 +99,6 @@ const TodoList = () => {
   const addTodo = (todo) => {
     setTodos([...todos, todo]);
   };
-
   const completeTodo = async (index) => {
     const todo = todos[index];
     try {
@@ -115,6 +115,10 @@ const TodoList = () => {
         data,
         ...todos.slice(index + 1),
       ]);
+      //re get todos after update
+      const response2 = await fetch("http://localhost:3001/todos");
+      const data2 = await response2.json();
+      setTodos(data2);
     } catch (error) {
       console.error(error);
     }
@@ -130,6 +134,10 @@ const TodoList = () => {
         ...todos.slice(0, index),
         ...todos.slice(index + 1),
       ]);
+      //re get todos
+      const response = await fetch("http://localhost:3001/todos");
+      const data = await response.json();
+      setTodos(data);
     } catch (error) {
       console.error(error);
     }
