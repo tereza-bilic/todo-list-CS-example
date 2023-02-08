@@ -41,10 +41,15 @@ app.get('/user/:id', function (req, res) {
   })
 })
 
-//check if user exists in database from post request
+//check if user exists in database from post request if so log in else send error
 app.post('/login', function (req, res) {
   db.get('SELECT * FROM users WHERE username = ? AND password = ?', [req.body.username, req.body.password], (err, row) => {
-    res.send(row + 'user ' + req.body.username + ' logged in with password ' + req.body.password)
+    if (row) {
+      res.send(row)
+    } else {
+      //return status 401 if user not found
+      res.status(401).send('error')
+    }
   })
 })
 
@@ -54,7 +59,7 @@ app.post('/register', function (req, res) {
     db.run('INSERT INTO users (username, password) VALUES (?, ?)', [req.body.username, req.body.password])
     res.send('user added')
   } else {
-    res.send('passwords do not match')
+    res.status(401).send('error')
   }
 })
 
@@ -77,5 +82,5 @@ app.delete('/todo/:id', function (req, res) {
 })
 
 app.listen(3001, function () {
-  console.log('Example app listening on port 3001!');
+  console.log('Example app listening on port 3001!')
 });
