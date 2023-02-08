@@ -16,8 +16,8 @@ db.serialize(() => {
 var express = require('express');//then we call express
 var app = express();//takes us to the root(/) URL
 var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
-
+//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 //get todos from database filter by date, color, name
 app.get('/todos', function (req, res) {
   db.all('SELECT * FROM todos', (err, rows) => {
