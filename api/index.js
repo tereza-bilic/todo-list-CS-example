@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database(':memory:')
 var cors = require('cors')
+
 db.serialize(() => {
   // user table with id, username and password
   db.run('CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)')
@@ -20,9 +21,9 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 // allow cors in express
 app.use(cors())
-//get todos from database using date, color, name
+//get todos from database
 app.get('/todos', function (req, res) {
-  db.all('SELECT * FROM todos WHERE date = ? AND color = ? AND title = ?', [req.query.date, req.query.color, req.query.title], (err, rows) => {
+  db.all('SELECT * FROM todos', (err, rows) => {
     res.send(rows)
   })
 })
@@ -43,7 +44,7 @@ app.get('/user/:id', function (req, res) {
 //check if user exists in database from post request
 app.post('/login', function (req, res) {
   db.get('SELECT * FROM users WHERE username = ? AND password = ?', [req.body.username, req.body.password], (err, row) => {
-    res.send(row)
+    res.send(row + 'user ' + req.body.username + ' logged in with password ' + req.body.password)
   })
 })
 
