@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database(':memory:')
+var cors = require('cors')
 
 db.serialize(() => {
   // user table with id, username and password
@@ -75,6 +76,6 @@ app.delete('/todo/:id', function (req, res) {
   res.send('todo deleted')
 })
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+app.listen(3001, function () {
+  console.log('Example app listening on port 3001!')
 });

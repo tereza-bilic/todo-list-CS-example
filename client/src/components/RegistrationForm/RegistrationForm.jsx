@@ -12,15 +12,12 @@ export default function RegistrationForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    axios.post('http://localhost:4000/register', {
+    axios.post('http://localhost:3001/register', {
       username: data.get('email'),
       password: data.get('password'),
       confirmPassword: data.get('confirmPassword')
     })
+    window.location = '/todo';
   };
 
   return (

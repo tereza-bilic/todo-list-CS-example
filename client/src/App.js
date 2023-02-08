@@ -5,6 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import LoginForm from './components/LoginForm/LoginForm';
+import TodoList from './components/TodoList/TodoList';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginForm />,
+  },
+  {
+    path: "/todo",
+    element: <TodoList />
   }
 ]);
 

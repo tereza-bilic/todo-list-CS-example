@@ -16,7 +16,7 @@ export default function LoginForm() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    axios.post('http://localhost:4000/login', {
+    axios.post('http://localhost:3001/login', {
       username: data.get('email'),
       password: data.get('password')
     })
