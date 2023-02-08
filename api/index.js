@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database(':memory:')
-
+var cors = require('cors')
 db.serialize(() => {
   // user table with id, username and password
   db.run('CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)')
