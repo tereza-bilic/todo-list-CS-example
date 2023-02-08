@@ -20,6 +20,12 @@ export default function LoginForm() {
       username: data.get('email'),
       password: data.get('password')
     })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('Login successful');
+      } else
+        console.log('Login failed');
+    })
   };
 
   return (

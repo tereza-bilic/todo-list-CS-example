@@ -83,7 +83,7 @@ const TodoList = () => {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getTodos = async () => {
       try {
         const response = await fetch("http://localhost:3001/todos");
         const data = await response.json();
@@ -92,39 +92,66 @@ const TodoList = () => {
         console.error(error);
       }
     };
-    fetchData();
+    getTodos();
   }, []);
 
   const addTodo = (todo) => {
     setTodos([...todos, todo]);
   };
 
-  const completeTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos[index].completed = !newTodos[index].completed;
-    setTodos(newTodos);
+  const completeTodo = async (index) => {
+    const todo = todos[index];
+    try {
+      const response = await fetch(`http://localhost:3001/todo/${todo.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...todo, completed: !todo.completed }),
+      });
+      const data = await response.json();
+      setTodos([
+        ...todos.slice(0, index),
+        data,
+        ...todos.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const removeTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
+  const removeTodo = async (index) => {
+    const todo = todos[index];
+    try {
+      await fetch(`http://localhost:3001/todo/${todo.id}`, {
+        method: "DELETE",
+      });
+      setTodos([
+        ...todos.slice(0, index),
+        ...todos.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div>
-      {todos.map((todo, index) => (
-        <Todo
-          key={index}
-          index={index}
-          todo={todo}
-          completeTodo={completeTodo}
-          removeTodo={removeTodo}
-        />
-      ))}
+      <h1>Todo List</h1>
       <TodoForm addTodo={addTodo} />
+      <div>
+        {todos.map((todo, index) => (
+          <Todo
+            key={index}
+            index={index}
+            todo={todo}
+            completeTodo={completeTodo}
+            removeTodo={removeTodo}
+          />
+        ))}
+      </div>
     </div>
   );
-};
+}
 
 export default TodoList;

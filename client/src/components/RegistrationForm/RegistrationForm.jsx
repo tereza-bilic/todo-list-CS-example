@@ -17,7 +17,13 @@ export default function RegistrationForm() {
       password: data.get('password'),
       confirmPassword: data.get('confirmPassword')
     })
-    window.location = '/todo';
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('Registration successful');
+      } else
+        console.log('Registration failed');
+    }
+    )
   };
 
   return (
