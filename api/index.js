@@ -43,7 +43,7 @@ app.get('/user/:id', function (req, res) {
 //check if user exists in database from post request
 app.post('/login', function (req, res) {
   db.get('SELECT * FROM users WHERE username = ? AND password = ?', [req.body.username, req.body.password], (err, row) => {
-    res.send(row)
+    res.send(row + 'user ' + req.body.username + ' logged in with password ' + req.body.password)
   })
 })
 
