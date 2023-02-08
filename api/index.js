@@ -18,9 +18,15 @@ var app = express();//takes us to the root(/) URL
 var bodyParser = require('body-parser');
 //app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-//get todos from database filter by date, color, name
+// allow cors
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+//get todos from database using date, color, name
 app.get('/todos', function (req, res) {
-  db.all('SELECT * FROM todos', (err, rows) => {
+  db.all('SELECT * FROM todos WHERE date = ? AND color = ? AND title = ?', [req.query.date, req.query.color, req.query.title], (err, rows) => {
     res.send(rows)
   })
 })
