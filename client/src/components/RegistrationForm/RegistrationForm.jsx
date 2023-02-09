@@ -19,7 +19,7 @@ export default function RegistrationForm() {
     })
     .then((response) => {
       if (response.status === 200) {
-        console.log('Registration successful');
+        window.location = '/todo'
       } else
         console.log('Registration failed');
     }

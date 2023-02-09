@@ -5,6 +5,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 const Todo = ({ todo, index, completeTodo, removeTodo }) => {
 
@@ -12,10 +14,10 @@ const Todo = ({ todo, index, completeTodo, removeTodo }) => {
     <List>
       <ListItem button>
         <Checkbox
-          checked={0}
+          checked={Boolean(todo.completed)}
           onClick={() => completeTodo(index)}
         />
-        <ListItemText primary={todo.title} />
+        <ListItemText primary={todo.title} sx={Boolean(todo.completed) ? {textDecoration: "line-through"} : {}}/>
         <Button onClick={() => removeTodo(index)}>Delete</Button>
       </ListItem>
     </List>
@@ -38,9 +40,9 @@ const TodoForm = ({ addTodo }) => {
         },
         body: JSON.stringify({ title, completed: false, color, date }),
       });
-      const data = await response.json();
-      addTodo(data);
-      
+
+      addTodo();
+
       setTitle("");
       setColor("");
       setDate("");
@@ -50,33 +52,19 @@ const TodoForm = ({ addTodo }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        margin="normal"
-      />
-      <TextField
-        label="Color"
-        value={color}
-        onChange={(e) => setColor(e.target.value)}
-        margin="normal"
-      />
-      <TextField
-        label="Date"
-        type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        margin="normal"
-      />
-      <Button type="submit" variant="contained">
-        Add Todo
-      </Button>
-    </form>
+      <Box component="form" onSubmit={handleSubmit} sx={{display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "50px"}}>
+        <TextField
+          sx={{width: '50ch', m: 1}}
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          margin="normal"
+          size="large"
+        />
+        <Button type="submit" variant="contained">
+          Add Todo
+        </Button>
+      </Box>
   );
 };
 
@@ -96,9 +84,12 @@ const TodoList = () => {
     getTodos();
   }, []);
 
-  const addTodo = (todo) => {
-    setTodos([...todos, todo]);
+  const addTodo = async (todo) => {
+    const response2 = await fetch("http://localhost:3001/todos");
+    const data2 = await response2.json();
+    setTodos(data2);
   };
+
   const completeTodo = async (index) => {
     const todo = todos[index];
     try {
@@ -109,12 +100,7 @@ const TodoList = () => {
         },
         body: JSON.stringify({ ...todo, completed: !todo.completed }),
       });
-      const data = await response.json();
-      setTodos([
-        ...todos.slice(0, index),
-        data,
-        ...todos.slice(index + 1),
-      ]);
+
       //re get todos after update
       const response2 = await fetch("http://localhost:3001/todos");
       const data2 = await response2.json();
@@ -144,21 +130,22 @@ const TodoList = () => {
   };
 
   return (
-    <div>
-      <h1>Todo List</h1>
-      <TodoForm addTodo={addTodo} />
+    <Container component="main" maxWidth="sm">
       <div>
-        {todos.map((todo, index) => (
-          <Todo
-            key={index}
-            index={index}
-            todo={todo}
-            completeTodo={completeTodo}
-            removeTodo={removeTodo}
-          />
-        ))}
+        <TodoForm addTodo={addTodo} />
+        <div>
+          {todos.map((todo, index) => (
+            <Todo
+              key={index}
+              index={index}
+              todo={todo}
+              completeTodo={completeTodo}
+              removeTodo={removeTodo}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </Container>
   );
 }
 
